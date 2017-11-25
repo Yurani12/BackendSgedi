@@ -39,10 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Documents.findAll", query = "SELECT d FROM Documents d")
     , @NamedQuery(name = "Documents.findById", query = "SELECT d FROM Documents d WHERE d.id = :id")
     , @NamedQuery(name = "Documents.findByName", query = "SELECT d FROM Documents d WHERE d.name = :name")
-    , @NamedQuery(name = "Documents.findByDescription", query = "SELECT d FROM Documents d WHERE d.description = :description")
     , @NamedQuery(name = "Documents.findByDate", query = "SELECT d FROM Documents d WHERE d.date = :date")
     , @NamedQuery(name = "Documents.findByFormat", query = "SELECT d FROM Documents d WHERE d.format = :format")
-    , @NamedQuery(name = "Documents.findByLocation", query = "SELECT d FROM Documents d WHERE d.location = :location")
     , @NamedQuery(name = "Documents.findByFolio", query = "SELECT d FROM Documents d WHERE d.folio = :folio")
     , @NamedQuery(name = "Documents.findByWeight", query = "SELECT d FROM Documents d WHERE d.weight = :weight")
     , @NamedQuery(name = "Documents.findByFile", query = "SELECT d FROM Documents d WHERE d.file = :file")})
@@ -61,11 +59,6 @@ public class Documents implements Serializable {
     private String name;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "description")
-    private String description;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
@@ -74,11 +67,6 @@ public class Documents implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "format")
     private String format;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 30)
-    @Column(name = "location")
-    private String location;
     @Basic(optional = false)
     @NotNull
     @Column(name = "folio")
@@ -97,6 +85,9 @@ public class Documents implements Serializable {
     private Users idUsers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDocumentsType")
     private List<DocumentsHasState> documentsHasStateList;
+    @JoinColumn(name = "id_category", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Category idCategory;
 
     public Documents() {
     }
@@ -105,13 +96,11 @@ public class Documents implements Serializable {
         this.id = id;
     }
 
-    public Documents(Integer id, String name, String description, Date date, String format, String location, int folio, double weight, String file) {
+    public Documents(Integer id, String name, Date date, String format, int folio, double weight, String file) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.date = date;
         this.format = format;
-        this.location = location;
         this.folio = folio;
         this.weight = weight;
         this.file = file;
@@ -133,14 +122,6 @@ public class Documents implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -156,15 +137,7 @@ public class Documents implements Serializable {
     public void setFormat(String format) {
         this.format = format;
     }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
+    
     public int getFolio() {
         return folio;
     }
@@ -195,6 +168,14 @@ public class Documents implements Serializable {
 
     public void setIdUsers(Users idUsers) {
         this.idUsers = idUsers;
+    }
+
+    public Category getIdCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(Category idCategory) {
+        this.idCategory = idCategory;
     }
 
     @XmlTransient

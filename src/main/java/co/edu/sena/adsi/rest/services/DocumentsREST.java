@@ -28,7 +28,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author adsi1261718
  */
-@Path("upload_documents")
+@Path("documents")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 
@@ -49,7 +49,7 @@ public class DocumentsREST {
         return documentsEJB.find(nombre);
     }
     @POST
-    @Path("documents")
+    @Path("documentsUpload")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadDocumentFile(
             @FormDataParam("file") InputStream in,

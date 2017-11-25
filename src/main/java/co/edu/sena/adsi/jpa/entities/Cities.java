@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Cities.findByDescription", query = "SELECT c FROM Cities c WHERE c.description = :description")})
 public class Cities implements Serializable {
 
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +55,9 @@ public class Cities implements Serializable {
     private Departaments idDepartaments;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "Cities")
     private List<Users> usersList;
+   
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idCities")
+    private List<Company> companyList;
 
     public Cities() {
     }
@@ -99,6 +103,15 @@ public class Cities implements Serializable {
     public void setUsersList(List<Users> usersList) {
         this.usersList = usersList;
     }
+    
+    @XmlTransient
+    public List<Company> getCompanyList() {
+        return companyList;
+    }
+
+    public void setCompanyList(List<Company> companyList) {
+        this.companyList = companyList;
+    }
 
     @Override
     public int hashCode() {
@@ -124,5 +137,7 @@ public class Cities implements Serializable {
     public String toString() {
         return "co.edu.sena.adsi.jpa.entities.Cities[ id=" + id + " ]";
     }
+
+    
     
 }
