@@ -5,7 +5,9 @@
  */
 package co.edu.sena.adsi.rest.services;
 
+import co.edu.sena.adsi.jpa.entities.Documents;
 import co.edu.sena.adsi.jpa.entities.Users;
+import co.edu.sena.adsi.jpa.sessions.DocumentsFacade;
 import co.edu.sena.adsi.jpa.sessions.UsersFacade;
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +35,16 @@ public class UploadRESTFile {
         //Se debe cambiar por la URL donde se quiera guardar la imagen
     private static final String UPLOAD_FOLDER = "/home/adsi1261718/Documentos/SPRINT 8/FRONTEND SGEDI/client/assets/fotos-usuarios/";
     private static final String UPLOAD_FOLDER_USUARIOS = "/home/adsi1261718/Documentos/SPRINT 8/FRONTEND SGEDI/client/assets/fotos-usuarios/";
+    private static final String UPLOAD_FOLDER_D = "/home/adsi1261718/Documentos/SPRINT 8/FRONTEND SGEDI/client/assets/documentos/";
+    private static final String UPLOAD_FOLDER_DOCUMENTS = "/home/adsi1261718/Documentos/SPRINT 8/FRONTEND SGEDI/client/assets/documentos/";
 
+
+    
     @EJB
     private UsersFacade usersEJB;
+    
+    @EJB
+    private DocumentsFacade documentsEJB;
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -83,6 +92,62 @@ public class UploadRESTFile {
                 Users user = usersEJB.find(idUser);
                 user.setUlrImg(upload.getPath());
                 usersEJB.edit(user);
+                return Response.status(Response.Status.OK).build();
+            }
+        } catch (IOException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e).build();
+        }
+
+    }
+    
+    
+    @POST
+    @Path("documents")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadDocumentFile(
+            @FormDataParam("file") InputStream in,
+            @FormDataParam("file") FormDataContentDisposition info,
+            @FormDataParam("idDocuments") Integer idDocuments) throws IOException {
+        
+        System.out.println("ID "+idDocuments);
+        File upload = new File(UPLOAD_FOLDER_D.concat(info.getFileName()));
+
+        try {
+            if (upload.exists()) {
+                String message = "file: " + upload.getName() + " already exists";
+                return Response.status(Response.Status.CONFLICT).entity(message).build();
+            } else {
+                
+                Files.copy(in, upload.toPath());
+                Documents documents = documentsEJB.find(idDocuments);
+                documents.setFile(upload.getName());
+                documentsEJB.edit(documents); 
+                return Response.status(Response.Status.OK).build();
+            }
+        } catch (IOException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e).build();
+        }
+
+    }
+
+    @POST
+    @Path("documentss")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadFileDocument(Integer idDocuments,
+            @FormDataParam("file") InputStream in,
+            @FormDataParam("file") FormDataContentDisposition info) throws IOException {
+
+        File upload = new File(UPLOAD_FOLDER_DOCUMENTS.concat(info.getFileName()));
+
+        try {
+            if (upload.exists()) {
+                String message = "file: " + upload.getName() + " already exists";
+                return Response.status(Response.Status.CONFLICT).entity(message).build();
+            } else {
+                Files.copy(in, upload.toPath());
+                Documents documents = documentsEJB.find(idDocuments);
+                documents.setFile(upload.getPath());
+                documentsEJB.edit(documents);
                 return Response.status(Response.Status.OK).build();
             }
         } catch (IOException e) {

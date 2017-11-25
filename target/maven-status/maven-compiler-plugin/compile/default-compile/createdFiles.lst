@@ -46,6 +46,7 @@ co/edu/sena/adsi/rest/services/NewCrossOriginResourceSharingFilter.class
 co/edu/sena/adsi/jpa/sessions/AbstractFacade.class
 co/edu/sena/adsi/rest/services/DocumentsTypeREST.class
 co/edu/sena/adsi/jpa/sessions/PromotionsFacade.class
+.netbeans_automatic_build
 co/edu/sena/adsi/jpa/entities/Cities.class
 co/edu/sena/adsi/jpa/entities/Cities_.class
 co/edu/sena/adsi/jpa/entities/Promotions.class

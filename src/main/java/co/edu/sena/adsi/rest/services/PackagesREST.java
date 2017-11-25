@@ -7,7 +7,11 @@ package co.edu.sena.adsi.rest.services;
 
 import co.edu.sena.adsi.jpa.entities.Packages;
 import co.edu.sena.adsi.jpa.sessions.PackagesFacade;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -40,8 +44,38 @@ public class PackagesREST {
     @PathParam("nombre")String nombre){
         return packagesEJB.find(nombre);
     }
+    
     @POST
     public void create(Packages packages){
-        packagesEJB.create(packages);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        
+        try {
+            Packages newPackages = new Packages();         
+        }catch (Exception e){
+            System.out.println("Error="+ e);
+        }
     }
+    public static void menuVentas(ArrayList<Packages> productos){
+        Packages newPackages = new Packages();
+        Scanner teclado = new Scanner (System.in);
+        int opcion;
+        
+        String respuesta;
+        do {
+            System.out.println("--Menu de ventas de paquetes--");
+            System.out.println("");
+            
+            for(int i = 1;i>=2; i++){
+                System.out.println("Pulse" + i + " Para comprar" + productos.get(i).getPackageName() + "cuyo precio es de"+ newPackages.getPrice());
+                System.out.println("Recuerda que solo puedes comprar un paquete, luego debes esperar a que termine el paquete activo para comprar otro");
+            }
+            opcion= teclado.nextInt();
+            System.out.println("Ha elegido comprar" +  productos.get(opcion).getPackageName());
+            System.out.println("Gracias por tu compra, te notificaremos cuando se termine tu paquete");
+            respuesta = teclado.next();
+        }while(respuesta.equalsIgnoreCase("si"));
+        System.out.println("El total de su compra es:" + productos.get(opcion).getPrice());
+    }
+    
 }
